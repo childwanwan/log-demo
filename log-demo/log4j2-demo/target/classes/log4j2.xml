@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ALL < TRACE < DEBUG < INFO < WARN < ERROR < FATAL < OFF -->
+<Configuration status="WARN">
+    <properties>
+        <!--<contextName>childwanwan</contextName>-->
+        <property name="log.charset" value="utf-8"/>
+        <!--<property name="log.info-pattern" value="%black(%contextName-) %red(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{360}) - %boldYellow(%msg%n)" />-->
+        <property name="log.info-pattern"
+                  value="%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{black} [%highlight{%thread}] %highlight{%-5level} %style{%C}{bright,Magenta} - %style{%msg}{bright,Green}%n"/>
+        <property name="file.info-pattern"
+                  value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %C - %msg%n"/>
+        <property name="log.error-pattern"
+                  value="%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{Red} [%highlight{%thread}] %highlight{%-5level} %style{%C}{Red} - %style{%msg}{Red}%n"/>
+        <property name="log.warn-pattern"
+                  value="%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{bright,yellow} [%highlight{%thread}] %highlight{%-5level} %style{%C}{bright,yellow} - %style{%msg}{bright,yellow}%n"/>
+
+        <!--定义日志文件的存储地址 勿在配置中使用相对路径-->
+        <property name="LOG_HOME">C:/allFile/file/file/log</property>
+        <property name="FILE_NAME">test</property>
+    </properties>
+
+
+    <Appenders>
+        <Console name="info-console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log.info-pattern}" disableAnsi="false"/>
+            <Filters>
+                <!--将ERROR及其以上级别的日志给DENY掉-->
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!--ACCEPT warn级别的日志-->
+                <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="NEUTRAL"/>
+            </Filters>
+        </Console>
+
+        <Console name="error-console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log.error-pattern}" disableAnsi="false"/>
+            <Filters>
+                <!--ACCEPT ERROR级别的日志-->
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+
+        <Console name="warn-console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${log.warn-pattern}" disableAnsi="false"/>
+            <Filters>
+                <!--将ERROR及其以上级别的日志给DENY掉-->
+                <ThresholdFilter level="ERROR" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <!--ACCEPT warn级别的日志-->
+                <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+        </Console>
+
+        <!--将info级别的日志单独输出到info.log中-->
+        <RollingFile name="info-file" filePattern="${LOG_HOME}/info-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${file.info-pattern}" disableAnsi="false"/>
+            <Filters>
+                <!--将WARN及其以上级别的日志给DENY掉-->
+                <ThresholdFilter level="WARN"  onMatch="DENY"   onMismatch="NEUTRAL"/>
+                <!--ACCEPT info级别的日志-->
+                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <SizeBasedTriggeringPolicy size="10KB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!--将error级别的日志单独输出到error.log中-->
+        <RollingFile name="error-file" filePattern="${LOG_HOME}/error-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${file.info-pattern}" disableAnsi="false"/>
+            <Filters>
+                <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+
+        <!--将info、error等级别的日志单独输出到all.log中-->
+        <RollingFile name="all-file" filePattern="${LOG_HOME}/all-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="${file.info-pattern}" disableAnsi="false"/>
+            <Policies>
+                <!-- 设置日志文件切分参数 -->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="info-console"/>
+            <AppenderRef ref="error-console"/>
+            <AppenderRef ref="warn-console"/>
+            <!--<AppenderRef ref="info-file" />-->
+            <!--<AppenderRef ref="error-file"/>-->
+            <!--<AppenderRef ref="all-file"/>-->
+        </Root>
+
+        <!-- mapper SQL日志 -->
+        <logger name="com.wanpp.test.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="info-console" />
+        </logger>
+
+        <!-- mapper SQL日志 -->
+        <logger name="com.wanpp.test.mapper" level="DEBUG" additivity="false">
+            <AppenderRef ref="info-console" />
+        </logger>
+
+    </Loggers>
+</Configuration>

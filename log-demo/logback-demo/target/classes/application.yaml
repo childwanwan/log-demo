@@ -1,0 +1,22 @@
+server:
+  port: 8881
+spring:
+  application:
+    name: demo
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 10
+swagger:
+  ui:
+    title: swagger接口Api文档
+    description: Wsg层暴露Api
+    termsOfServiceUrl: www.baidu.com
+    contact:
+      name: wanpp
+      url: www.baidu.com
+      email: 1635679119@qq.com
+    version: 1.0

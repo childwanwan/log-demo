@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/log-demo/log-demo.iml" filepath="$PROJECT_DIR$/log-demo/log-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/log-demo/log4j2-demo/log4j2-demo.iml" filepath="$PROJECT_DIR$/log-demo/log4j2-demo/log4j2-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/log-demo/logback-demo/logback-demo.iml" filepath="$PROJECT_DIR$/log-demo/logback-demo/logback-demo.iml" />
+    </modules>
+  </component>
+</project>

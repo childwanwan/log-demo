@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanpp.test.mapper.DataMainMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wanpp.test.entity.DataMain">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="mix_id" jdbcType="INTEGER" property="mixId"/>
+        <result column="max_id" jdbcType="INTEGER" property="maxId"/>
+        <result column="des" jdbcType="VARCHAR" property="des"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        mix_id, max_id, des
+    </sql>
+
+
+    <!-- 模糊列表查询 -->
+    <select id="describeListByFuzzy" parameterType="com.wanpp.test.entity.DataMain" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM data_main
+        <where>
+            <if test="id != null and id != ''">
+                AND data_main.id like concat('%',#{id,jdbcType=INTEGER},'%')
+            </if>
+            <if test="mixId != null">
+                AND data_main.mix_id like concat('%',#{mixId,jdbcType=INTEGER},'%')
+            </if>
+            <if test="maxId != null">
+                AND data_main.max_id like concat('%',#{maxId,jdbcType=INTEGER},'%')
+            </if>
+            <if test="des != null and des != ''">
+                AND data_main.des like concat('%',#{des,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 精确列表查询 -->
+    <select id="describeList" parameterType="com.wanpp.test.entity.DataMain" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM data_main
+        <where>
+            <if test="id != null and id != ''">
+                AND data_main.id like concat('%',#{id,jdbcType=INTEGER},'%')
+            </if>
+            <if test="mixId != null">
+                AND data_main.mix_id = #{mixId,jdbcType=INTEGER}
+            </if>
+            <if test="maxId != null">
+                AND data_main.max_id = #{maxId,jdbcType=INTEGER}
+            </if>
+            <if test="des != null and des != ''">
+                AND data_main.des = #{des,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 更新 -->
+    <update id="updateDataMain" parameterType="com.wanpp.test.entity.DataMain">
+        UPDATE data_main
+        <set>
+            <if test="mixId != null">
+                mix_id = #{mixId,jdbcType=INTEGER},
+            </if>
+            <if test="maxId != null">
+                max_id = #{maxId,jdbcType=INTEGER},
+            </if>
+            <if test="des != null and des != ''">
+                des = #{des,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="id != null">
+                AND data_main.id = #{id,jdbcType=INTEGER},
+            </if>
+        </where>
+    </update>
+
+    <!-- 插入 -->
+    <insert id="insertDataMain" parameterType="com.wanpp.test.entity.DataMain">
+        INSERT INTO data_main
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="mixId != null">
+                mix_id,
+            </if>
+            <if test="maxId != null">
+                max_id,
+            </if>
+            <if test="des != null and des != ''">
+                des,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="mixId != null">
+                #{mix_id,jdbcType=VARCHAR},
+            </if>
+            <if test="maxId != null">
+                #{max_id,jdbcType=VARCHAR},
+            </if>
+            <if test="des != null and des != ''">
+                #{des,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteDataMain" parameterType="java.lang.String">
+        DELETE FROM data_main
+        <where>
+            <if test="id != null and id != ''">
+                AND data_main.id = #{id,jdbcType=INTEGER}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

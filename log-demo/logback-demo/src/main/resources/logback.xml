@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds" debug="false">
+    <!-- 日志级别排序为： TRACE < DEBUG < INFO < WARN < ERROR -->
+    <!--<contextName>childwanwan</contextName>-->
+    <property name="log.charset" value="utf-8" />
+    <!--<property name="log.info-pattern" value="%black(%contextName-) %red(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{360}) - %boldYellow(%msg%n)" />-->
+    <property name="log.info-pattern" value="%black(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %highlight(%-5level) %boldMagenta(%logger{360}) - %boldYellow(%msg%n)" />
+    <property name="log.warn-pattern" value="%boldYellow(%d{yyyy-MM-dd HH:mm:ss.SSS}) %boldYellow([%thread]) %highlight(%-5level) %boldYellow(%logger{360}) - %boldYellow(%msg%n)" />
+    <property name="log.error-pattern" value="%red(%d{yyyy-MM-dd HH:mm:ss.SSS}) %red([%thread]) %highlight(%-5level) %red(%logger{360}) - %red(%msg%n)" />
+    <property name="log.file-pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{360} - %msg%n" />
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="LOG_HOME" value="C:/allFile/file/file/log" />
+    <!--正常日志-->
+    <appender name="info-console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.info-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <!--过滤掉error的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>  <!-- 如果命中就禁止这条日志 -->
+            <onMismatch>NEUTRAL</onMismatch>  <!-- 如果没有命中就使用这条规则 -->
+        </filter>
+        <!--过滤掉warn的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+    </appender>
+
+    <!--ERROR日志-->
+    <appender name="error-console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.error-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <!--过滤掉非error的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 只打印DEBUG日志 -->
+            <!-- 在日志配置级别的基础上过滤掉info级别以下的日志 -->
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!--警告日志-->
+    <appender name="warn-console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${log.warn-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <!--过滤掉error及其以上级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+        <!--ACCEPT warn级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 生成info级别日志文件 -->
+    <appender name="INFO-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.file-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/info-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+            <!--日志文件保留天数-->
+            <MaxHistory>2</MaxHistory>
+        </rollingPolicy>
+        <!--过滤掉error的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>  <!-- 如果命中就禁止这条日志 -->
+            <onMismatch>ACCEPT</onMismatch>  <!-- 如果没有命中就使用这条规则 -->
+        </filter>
+    </appender>
+
+    <!-- 生成 ERROR 级别的日志文件 -->
+    <appender name="ERROR-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.file-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <!--过滤掉非error的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 只打印DEBUG日志 -->
+            <!-- 在日志配置级别的基础上过滤掉info级别以下的日志 -->
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/error-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+            <!--日志文件保留天数-->
+            <MaxHistory>2</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 生成 ERROR 级别的日志文件 -->
+    <appender name="ALL-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${log.file-pattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${LOG_HOME}/all-%d{yyyy-MM-dd}-%i.log</FileNamePattern>
+            <TimeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </TimeBasedFileNamingAndTriggeringPolicy>
+            <!--日志文件保留天数-->
+            <MaxHistory>2</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!--普通日志输出到控制台-->
+    <root level="info">
+        <!--<appender-ref ref="INFO-FILE" />-->
+        <!--<appender-ref ref="ERROR-FILE" />-->
+        <!--<appender-ref ref="ALL-FILE" />-->
+        <appender-ref ref="info-console" />
+        <appender-ref ref="error-console" />
+        <appender-ref ref="warn-console"/>
+    </root>
+
+    <logger name="com.baomidou.mybatisplus.generator" level="DEBUG" additivity="false">
+        <appender-ref ref="info-console" />
+    </logger>
+
+    <!--jdbc 连接 -->
+    <logger name="jdbc.connection" level="INFO" additivity="false">
+        <appender-ref ref="info-console" />
+    </logger>
+
+    <!--jdbc 连接 -->
+    <logger name="com.wanpp.test.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="info-console" />
+    </logger>
+
+</configuration>

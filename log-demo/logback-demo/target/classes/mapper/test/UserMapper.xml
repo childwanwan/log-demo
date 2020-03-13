@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wanpp.test.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wanpp.test.entity.User">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        username, password, nickname
+    </sql>
+
+
+    <!-- 模糊列表查询 -->
+    <select id="describeListByFuzzy" parameterType="com.wanpp.test.entity.User" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+        <where>
+            <if test="id != null and id != ''">
+                AND user.id like concat('%',#{id,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="username != null and username != ''">
+                AND user.username like concat('%',#{username,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="password != null and password != ''">
+                AND user.password like concat('%',#{password,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="nickname != null and nickname != ''">
+                AND user.nickname like concat('%',#{nickname,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 精确列表查询 -->
+    <select id="describeList" parameterType="com.wanpp.test.entity.User" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+        <where>
+            <if test="id != null and id != ''">
+                AND user.id = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="username != null and username != ''">
+                AND user.username = #{username,jdbcType=VARCHAR}
+            </if>
+            <if test="password != null and password != ''">
+                AND user.password = #{password,jdbcType=VARCHAR}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                AND user.nickname = #{nickname,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+
+    <!-- 更新 -->
+    <update id="updateUser" parameterType="com.wanpp.test.entity.User">
+        UPDATE user
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            <if test="id != null and id != ''">
+                AND user.id = #{id,jdbcType=VARCHAR},
+            </if>
+        </where>
+    </update>
+
+    <!-- 插入 -->
+    <insert id="insertUser" parameterType="com.wanpp.test.entity.User">
+        INSERT INTO user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                id,
+            </if>
+            <if test="username != null and username != ''">
+                username,
+            </if>
+            <if test="password != null and password != ''">
+                password,
+            </if>
+            <if test="nickname != null and nickname != ''">
+                nickname,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != ''">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="username != null and username != ''">
+                #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null and password != ''">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="nickname != null and nickname != ''">
+                #{nickname,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 删除 -->
+    <delete id="deleteUser" parameterType="java.lang.String">
+        DELETE FROM user
+        <where>
+            <if test="id != null and id != ''">
+                AND user.id = #{id,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </delete>
+
+</mapper>
